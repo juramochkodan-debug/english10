@@ -1,0 +1,969 @@
+<!doctype html>
+
+
+
+<html lang="ru">
+
+
+
+<head>
+
+
+
+<meta charset="utf-8">
+
+
+
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="English 10">
+<meta name="theme-color" content="#f5f6f8">
+
+
+
+<title>English 10 — Daily Vocabulary</title>
+
+
+
+<style>
+
+
+
+:root { --bg:#f5f6f8; --card:#fff; --text:#17181b; --muted:#6d717a; --accent:#111; --line:#e6e7eb; --ok:#16834b; --bad:#c93636; }
+
+
+
+*{box-sizing:border-box}
+
+
+
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+
+
+
+.wrap{max-width:760px;margin:auto;padding:24px 16px 50px}
+
+
+
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+
+
+
+h1{font-size:25px;margin:0}.streak{background:#fff;border:1px solid var(--line);padding:9px 13px;border-radius:14px;font-weight:700}
+
+
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;margin:12px 0;box-shadow:0 4px 18px #00000008}
+
+
+
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+
+
+
+button{border:0;border-radius:13px;padding:12px 14px;font-size:15px;font-weight:700;cursor:pointer;background:#eeeef1;color:#222}
+
+
+
+button.active,button.primary{background:var(--accent);color:#fff}
+
+
+
+button:disabled{opacity:.5;cursor:not-allowed}
+
+
+
+.hidden{display:none!important}
+
+
+
+.day{color:var(--muted);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+
+
+
+.word{font-size:32px;font-weight:800;margin:8px 0}.trans{font-size:19px;color:var(--muted)}
+
+
+
+.example{margin-top:13px;padding:13px;background:#f7f7f8;border-radius:12px;line-height:1.5}
+
+
+
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+
+
+
+.progress{height:8px;background:#ececef;border-radius:99px;overflow:hidden;margin:15px 0}
+
+
+
+.bar{height:100%;background:#111;width:0}
+
+
+
+.q{font-size:20px;font-weight:750;line-height:1.4;margin:14px 0}
+
+
+
+.options{display:grid;gap:9px}
+
+
+
+.option{text-align:left;background:#f3f3f5}.option.correct{background:#dff5e9;color:#12653c}.option.wrong{background:#ffe1e1;color:#9e2525}
+
+
+
+.feedback{margin-top:12px;font-weight:650}.muted{color:var(--muted)}
+
+
+
+input{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;font-size:16px}
+
+
+
+.emoji{font-size:38px;letter-spacing:5px}
+
+
+
+.score{font-size:42px;font-weight:850}
+
+
+
+.small{font-size:13px;color:var(--muted)}
+
+
+
+.wordlist{display:grid;gap:8px}.row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+
+
+
+@media(max-width:520px){.wrap{padding-top:15px}.word{font-size:28px}.tabs{grid-template-columns:1fr 1fr}.tabs button:last-child{grid-column:span 2}}
+
+
+
+</style>
+
+
+
+
+<style id="ios-enhancements">
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+  button, a, input, select, textarea {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  button { min-height: 44px; }
+  @media (max-width: 600px) {
+    body { margin: 0; padding-left: 12px; padding-right: 12px; }
+    .container, main, .wrap { max-width: 100% !important; width: 100% !important; }
+    h1 { font-size: clamp(28px, 8vw, 40px); }
+    .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    button { min-height: 46px; }
+  }
+</style>
+
+</head>
+
+
+
+<body>
+
+
+
+<div class="wrap">
+
+
+
+<header><h1>English 10</h1><div class="streak" id="streak">🔥 0</div></header>
+
+
+
+<div class="tabs">
+
+
+
+<button id="tabLearn" class="active" onclick="showTab('learn')">Сегодня</button>
+
+
+
+<button id="tabReview" onclick="showTab('review')">Повторить</button>
+
+
+
+<button id="tabWeek" onclick="showTab('week')">Weekly Test</button>
+
+
+
+</div>
+
+
+
+<section id="learn">
+
+
+
+<div class="card">
+
+
+
+<div class="day" id="dayLabel"></div>
+
+
+
+<div id="learnArea"></div>
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+<section id="quiz" class="hidden">
+
+
+
+<div class="card">
+
+
+
+<div class="small" id="quizMeta"></div>
+
+
+
+<div class="progress"><div class="bar" id="quizBar"></div></div>
+
+
+
+<div id="quizArea"></div>
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+<section id="review" class="hidden">
+
+
+
+<div class="card">
+
+
+
+<h2>Повторение</h2>
+
+
+
+<p class="muted">Выбери день, который хочешь повторить.</p>
+
+
+
+<div id="reviewButtons" class="actions"></div>
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+<section id="week" class="hidden">
+
+
+
+<div class="card">
+
+
+
+<h2>📚 Weekly Test</h2>
+
+
+
+<p class="muted">Тест по всем словам текущей недели.</p>
+
+
+
+<button class="primary" onclick="startWeekly()">Начать тест</button>
+
+
+
+</div>
+
+
+
+<div class="card">
+
+
+
+<h3>Слова недели</h3>
+
+
+
+<div id="weekWords" class="wordlist"></div>
+
+
+
+</div>
+
+
+
+</section>
+
+
+
+</div>
+
+
+
+<script>
+
+
+
+const DAYS = {
+
+
+
+1:[
+
+
+
+["avoid","избегать","I try to avoid unnecessary problems."],
+
+
+
+["improve","улучшать","I want to improve my English."],
+
+
+
+["likely","вероятный; скорее всего","It is likely to happen."],
+
+
+
+["effort","усилие","Learning requires effort."],
+
+
+
+["notice","замечать","I noticed a mistake."],
+
+
+
+["achieve","достигать","I want to achieve my goals."],
+
+
+
+["handle","справляться","I can handle this problem."],
+
+
+
+["reliable","надёжный","He is a reliable person."],
+
+
+
+["require","требовать","This job requires experience."],
+
+
+
+["opportunity","возможность","This is a great opportunity."]
+
+
+
+],
+
+
+
+2:[
+
+
+
+["increase","увеличивать","We need to increase sales."],
+
+
+
+["reduce","уменьшать","We should reduce unnecessary costs."],
+
+
+
+["provide","предоставлять","Can you provide more details?"],
+
+
+
+["suggest","предлагать","I suggest trying again."],
+
+
+
+["manage","управлять; справляться","She manages a small team."],
+
+
+
+["depend","зависеть","It depends on the situation."],
+
+
+
+["expect","ожидать","What do you expect from this job?"],
+
+
+
+["realize","осознавать","I realized my mistake."],
+
+
+
+["available","доступный","The service is available 24/7."],
+
+
+
+["decision","решение","It was a difficult decision."]
+
+
+
+],
+
+
+
+3:[
+
+
+
+["benefit","преимущество; польза","Regular practice has many benefits."],
+
+
+
+["challenge","сложность; вызов","Learning a language is a challenge."],
+
+
+
+["consider","рассматривать; учитывать","Please consider my suggestion."],
+
+
+
+["develop","развивать","I want to develop new skills."],
+
+
+
+["experience","опыт","I have experience in sales."],
+
+
+
+["focus","сосредоточиться","Try to focus on the main task."],
+
+
+
+["increase","увеличивать","We need to increase the conversion rate."],
+
+
+
+["maintain","поддерживать","It is important to maintain quality."],
+
+
+
+["prefer","предпочитать","I prefer working in the morning."],
+
+
+
+["successful","успешный","The campaign was successful."]
+
+
+
+]
+
+
+
+};
+
+
+
+let state = JSON.parse(localStorage.getItem("english10") || '{"completedDays":[],"correct":{},"streak":0}');
+
+
+
+let current = [], qi=0, score=0, mode="mixed", answered=false;
+
+
+
+function save(){localStorage.setItem("english10",JSON.stringify(state));}
+
+
+
+function currentDay(){
+
+
+
+const start = localStorage.getItem("english10Start");
+
+
+
+if(!start){localStorage.setItem("english10Start",Date.now()); return 1;}
+
+
+
+const d=Math.floor((Date.now()-Number(start))/86400000)+1;
+
+
+
+return Math.min(Math.max(d,1),7);
+
+
+
+}
+
+
+
+function dayWords(d){return DAYS[d]||DAYS[1];}
+
+
+
+function updateHeader(){document.getElementById("streak").textContent="🔥 "+(state.streak||0);}
+
+
+
+function showTab(tab){
+
+
+
+["learn","review","week","quiz"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+
+
+
+["tabLearn","tabReview","tabWeek"].forEach(x=>document.getElementById(x).classList.remove("active"));
+
+
+
+if(tab==="learn"){document.getElementById("learn").classList.remove("hidden");document.getElementById("tabLearn").classList.add("active");}
+
+
+
+if(tab==="review"){document.getElementById("review").classList.remove("hidden");document.getElementById("tabReview").classList.add("active");renderReview();}
+
+
+
+if(tab==="week"){document.getElementById("week").classList.remove("hidden");document.getElementById("tabWeek").classList.add("active");renderWeek();}
+
+
+
+}
+
+
+
+function renderLearn(){
+
+
+
+const d=currentDay(), words=dayWords(d);
+
+
+
+document.getElementById("dayLabel").textContent="DAY "+d+" • "+words.length+" WORDS";
+
+
+
+document.getElementById("learnArea").innerHTML=`
+
+
+
+<h2>Сегодняшние слова</h2>
+
+
+
+<div class="wordlist">${words.map((w,i)=>`<div class="row"><div><b>${i+1}. ${w[0]}</b><div class="small">${w[2]}</div></div><div>${w[1]}</div></div>`).join("")}</div>
+
+
+
+<div class="actions">
+
+
+
+<button class="primary" onclick="startDay(${d})">Я выучил → Тест</button>
+
+
+
+</div>`;
+
+
+
+}
+
+
+
+function startDay(d){
+
+
+
+current=dayWords(d).map(w=>({w, type:null}));
+
+
+
+shuffle(current); qi=0; score=0; mode="mixed"; showQuiz();
+
+
+
+}
+
+
+
+function startWeekly(){
+
+
+
+let all=[];
+
+
+
+for(let d=1;d<=Math.min(currentDay(),3);d++) all=all.concat(dayWords(d));
+
+
+
+current=all.map(w=>({w})); shuffle(current); qi=0; score=0; mode="weekly"; showQuiz();
+
+
+
+}
+
+
+
+function startReview(d){
+
+
+
+current=dayWords(d).map(w=>({w})); shuffle(current); qi=0; score=0; mode="review"; showQuiz();
+
+
+
+}
+
+
+
+function showQuiz(){
+
+
+
+["learn","review","week"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+
+
+
+document.getElementById("quiz").classList.remove("hidden");
+
+
+
+renderQuestion();
+
+
+
+}
+
+
+
+function makeQuestion(item,index){
+
+
+
+const [en,ru,ex]=item.w;
+
+
+
+const types=["mc_enru","mc_ruen","emoji","sentence"];
+
+
+
+if(mode==="weekly") return {type:types[index%types.length],en,ru,ex};
+
+
+
+return {type:types[index%types.length],en,ru,ex};
+
+
+
+}
+
+
+
+function renderQuestion(){
+
+
+
+if(qi>=current.length){finishQuiz();return;}
+
+
+
+answered=false;
+
+
+
+const item=current[qi], q=makeQuestion(item,qi);
+
+
+
+document.getElementById("quizMeta").textContent=`${qi+1} / ${current.length}`;
+
+
+
+document.getElementById("quizBar").style.width=(qi/current.length*100)+"%";
+
+
+
+let html="";
+
+
+
+if(q.type==="mc_enru"){
+
+
+
+html=`<div class="q">What does <b>${q.en}</b> mean?</div>${optionsHTML(q.ru, allRus(q.en), "answer")}`;
+
+
+
+} else if(q.type==="mc_ruen"){
+
+
+
+html=`<div class="q">Как по-английски: <b>${q.ru}</b>?</div>${optionsHTML(q.en, allEns(q.en), "answer")}`;
+
+
+
+} else if(q.type==="emoji"){
+
+
+
+const emojis={avoid:"🚫⚠️",improve:"📈🛠️",likely:"🤔➡️",effort:"💪😓",notice:"👀💡",achieve:"🎯🏆",handle:"🧑‍💼🛠️",reliable:"🤝✅",require:"📋⚠️",opportunity:"🚪✨",increase:"📈⬆️",reduce:"📉⬇️",provide:"🎁📦",suggest:"💡👉",manage:"👨‍💼📊",depend:"🔗🤷",expect:"👀📅",realize:"💡😮",available:"🟢📲",decision:"🤔➡️",benefit:"👍✨",challenge:"🧗‍♂️🔥",consider:"🤔🔍",develop:"🌱📈",experience:"🧠💼",focus:"🎯👀",maintain:"🔧✅",prefer:"❤️➡️",successful:"🏆🎉"};
+
+
+
+html=`<div class="emoji">${emojis[q.en]||"🤔💬"}</div><div class="q">Какое слово лучше всего подходит к этой идее?</div>${optionsHTML(q.ru, allRus(q.en), "answer")}`;
+
+
+
+} else {
+
+
+
+html=`<div class="q">Переведи предложение:<br><br><i>${q.ex}</i></div>
+
+
+
+<input id="textAnswer" placeholder="Напиши перевод на русском…">
+
+
+
+<div class="actions"><button class="primary" onclick="checkText('${escapeJS(q.ru)}')">Проверить</button></div>`;
+
+
+
+}
+
+
+
+document.getElementById("quizArea").innerHTML=html;
+
+
+
+}
+
+
+
+function escapeJS(s){return s.replace(/\\\\/g,"\\\\\\\\").replace(/'/g,"\\\\'");}
+
+
+
+function allRus(en){
+
+
+
+return shuffleCopy(current.map(x=>x.w[1]).filter(x=>x!==state._tmp && x!==dayWords(currentDay()).find(w=>w[0]===en)?.[1])).slice(0,3);
+
+
+
+}
+
+
+
+function allEns(en){
+
+
+
+return shuffleCopy(current.map(x=>x.w[0]).filter(x=>x!==en)).slice(0,3);
+
+
+
+}
+
+
+
+function optionsHTML(correct, others, cls){
+
+
+
+const opts=shuffleCopy([correct,...others]);
+
+
+
+return `<div class="options">${opts.map(o=>`<button class="option" onclick="checkChoice(this,'${escapeJS(correct)}','${escapeJS(o)}')">${o}</button>`).join("")}</div><div id="feedback"></div>`;
+
+
+
+}
+
+
+
+function checkChoice(btn,correct,chosen){
+
+
+
+if(answered)return; answered=true;
+
+
+
+const ok=chosen===correct; if(ok)score++;
+
+
+
+btn.classList.add(ok?"correct":"wrong");
+
+
+
+if(!ok) [...document.querySelectorAll(".option")].find(b=>b.textContent===correct)?.classList.add("correct");
+
+
+
+document.getElementById("feedback").innerHTML=`<div class="feedback" style="color:${ok?"var(--ok)":"var(--bad)"}">${ok?"✓ Верно":"✗ Правильный ответ: "+correct}</div><div class="actions"><button class="primary" onclick="nextQ()">Далее →</button></div>`;
+
+
+
+}
+
+
+
+function checkText(correct){
+
+
+
+if(answered)return; answered=true;
+
+
+
+const val=document.getElementById("textAnswer").value.trim().toLowerCase();
+
+
+
+const normalized=correct.toLowerCase().replace(/[.;]/g,"");
+
+
+
+const ok=val===normalized || val.includes(normalized) || normalized.includes(val)&&val.length>4;
+
+
+
+if(ok)score++;
+
+
+
+document.getElementById("feedback").innerHTML=`<div class="feedback" style="color:${ok?"var(--ok)":"var(--bad)"}">${ok?"✓ Отлично":"✗ Вариант ответа: "+correct}</div><div class="actions"><button class="primary" onclick="nextQ()">Далее →</button></div>`;
+
+
+
+}
+
+
+
+function nextQ(){qi++;renderQuestion();}
+
+
+
+function finishQuiz(){
+
+
+
+const pct=Math.round(score/current.length*100);
+
+
+
+document.getElementById("quizBar").style.width="100%";
+
+
+
+document.getElementById("quizMeta").textContent="Готово";
+
+
+
+document.getElementById("quizArea").innerHTML=`<div class="score">${pct}%</div><h2>${pct>=90?"🔥 Отлично!":pct>=70?"👍 Хорошая работа":"💪 Нужно немного повторить"}</h2><p class="muted">${score} правильных из ${current.length}.</p><div class="actions"><button class="primary" onclick="showTab('learn')">На сегодня</button><button onclick="showTab('review')">Повторить</button></div>`;
+
+
+
+if(mode!=="review"){state.streak=(state.streak||0)+1;save();updateHeader();}
+
+
+
+}
+
+
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+
+
+function shuffleCopy(a){return shuffle(a.slice());}
+
+
+
+function renderReview(){
+
+
+
+document.getElementById("reviewButtons").innerHTML=Object.keys(DAYS).map(d=>`<button onclick="startReview(${d})">Day ${d} · 10 слов</button>`).join("");
+
+
+
+}
+
+
+
+function renderWeek(){
+
+
+
+let all=[];
+
+
+
+for(let d=1;d<=Math.min(currentDay(),3);d++)all=all.concat(dayWords(d));
+
+
+
+document.getElementById("weekWords").innerHTML=all.map(w=>`<div class="row"><b>${w[0]}</b><span>${w[1]}</span></div>`).join("");
+
+
+
+}
+
+
+
+updateHeader();renderLearn();
+
+
+
+</script>
+
+
+
+</body>
+
+
+
+</html>
